@@ -1,0 +1,145 @@
+{
+  "symptomes": [
+    "fievre",
+    "toux",
+    "toux_seche",
+    "mal_de_gorge",
+    "nez_bouche",
+    "nez_qui_coule",
+    "eternuements",
+    "fatigue",
+    "frissons",
+    "maux_de_tete",
+    "douleurs_musculaires",
+    "douleurs_abdominales",
+    "nausees",
+    "vomissements",
+    "diarrhee",
+    "perte_appetit",
+    "brulures_urinaires",
+    "envies_frequentes_uriner",
+    "douleur_bas_ventre",
+    "urines_troubles",
+    "sensibilite_lumiere",
+    "vision_floue",
+    "vertiges",
+    "douleur_un_cote_tete",
+    "aggravation_effort",
+    "ganglions_gonfles",
+    "voix_rauque",
+    "douleur_deglutition",
+    "sueurs_nocturnes",
+    "courbatures"
+  ],
+  "diagnostics": [
+    "rhume",
+    "grippe",
+    "angine",
+    "gastro_enterite",
+    "infection_urinaire",
+    "migraine"
+  ],
+  "regles": [
+  {
+    "id": "r_rhume_1",
+    "diagnostic": "rhume",
+    "si_tous": ["nez_qui_coule", "eternuements"],
+    "si_un": ["mal_de_gorge", "toux", "nez_bouche"],
+    "confiance": 0.65,
+    "explication": "Nez qui coule et éternuements sont typiques d'un rhume, parfois avec gorge irritée ou toux."
+  },
+  {
+    "id": "r_rhume_2",
+    "diagnostic": "rhume",
+    "si_tous": ["nez_bouche", "nez_qui_coule"],
+    "si_un": ["fatigue", "mal_de_gorge"],
+    "confiance": 0.55,
+    "explication": "Congestion et écoulement nasal évoquent un rhume, avec fatigue possible."
+  },
+
+  {
+    "id": "r_grippe_1",
+    "diagnostic": "grippe",
+    "si_tous": ["fievre", "courbatures", "fatigue"],
+    "si_un": ["frissons", "toux", "douleurs_musculaires"],
+    "confiance": 0.8,
+    "explication": "Fièvre + fatigue + courbatures avec frissons/toux évoquent une grippe."
+  },
+  {
+    "id": "r_grippe_2",
+    "diagnostic": "grippe",
+    "si_tous": ["fievre", "douleurs_musculaires"],
+    "si_un": ["frissons", "toux_seche", "maux_de_tete"],
+    "confiance": 0.75,
+    "explication": "Fièvre et douleurs musculaires, associés à frissons/toux sèche/maux de tête, orientent vers une grippe."
+  },
+
+  {
+    "id": "r_angine_1",
+    "diagnostic": "angine",
+    "si_tous": ["mal_de_gorge", "douleur_deglutition"],
+    "si_un": ["fievre", "ganglions_gonfles", "voix_rauque"],
+    "confiance": 0.75,
+    "explication": "Mal de gorge avec douleur à la déglutition et fièvre/ganglions évoque une angine."
+  },
+  {
+    "id": "r_angine_2",
+    "diagnostic": "angine",
+    "si_tous": ["mal_de_gorge", "ganglions_gonfles"],
+    "si_un": ["fievre", "douleur_deglutition"],
+    "confiance": 0.7,
+    "explication": "Gorge irritée avec ganglions et fièvre possible évoquent une angine."
+  },
+
+  {
+    "id": "r_gastro_1",
+    "diagnostic": "gastro_enterite",
+    "si_tous": ["diarrhee", "douleurs_abdominales"],
+    "si_un": ["nausees", "vomissements", "perte_appetit"],
+    "confiance": 0.8,
+    "explication": "Diarrhée et douleurs abdominales avec nausées/vomissements évoquent une gastro-entérite."
+  },
+  {
+    "id": "r_gastro_2",
+    "diagnostic": "gastro_enterite",
+    "si_tous": ["vomissements"],
+    "si_un": ["diarrhee", "nausees", "douleurs_abdominales"],
+    "confiance": 0.65,
+    "explication": "Vomissements associés à diarrhée ou douleurs abdominales orientent vers une gastro-entérite."
+  },
+
+  {
+    "id": "r_iu_1",
+    "diagnostic": "infection_urinaire",
+    "si_tous": ["brulures_urinaires", "envies_frequentes_uriner"],
+    "si_un": ["douleur_bas_ventre", "urines_troubles"],
+    "confiance": 0.85,
+    "explication": "Brûlures urinaires et envies fréquentes, avec douleur pelvienne/urines troubles, évoquent une infection urinaire."
+  },
+  {
+    "id": "r_iu_2",
+    "diagnostic": "infection_urinaire",
+    "si_tous": ["brulures_urinaires"],
+    "si_un": ["envies_frequentes_uriner", "urines_troubles", "douleur_bas_ventre"],
+    "confiance": 0.7,
+    "explication": "Brûlures urinaires avec signes associés (envies fréquentes, urines troubles, douleur bas ventre) orientent vers une infection urinaire."
+  },
+
+  {
+    "id": "r_migraine_1",
+    "diagnostic": "migraine",
+    "si_tous": ["maux_de_tete", "douleur_un_cote_tete"],
+    "si_un": ["sensibilite_lumiere", "nausees", "aggravation_effort"],
+    "confiance": 0.85,
+    "explication": "Céphalée d'un côté avec photophobie/nausées et aggravation à l'effort évoque une migraine."
+  },
+  {
+    "id": "r_migraine_2",
+    "diagnostic": "migraine",
+    "si_tous": ["maux_de_tete", "sensibilite_lumiere"],
+    "si_un": ["nausees", "vision_floue", "vertiges"],
+    "confiance": 0.75,
+    "explication": "Maux de tête avec sensibilité à la lumière et nausées/vision floue peut correspondre à une migraine."
+  }
+]
+}
