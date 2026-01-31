@@ -58,7 +58,8 @@ Depuis la racine du dépôt :
 python -m uvicorn groupe-02-systeme-expert-medical.web.backend.app:app --reload --port 8000
 
 L’API est disponible sur :
-http://127.0.0.1:8000
+http://127.0.0.1:8000/docs
+
 
 
 Endpoints utiles :
