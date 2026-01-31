@@ -29,128 +29,174 @@
     "voix_rauque",
     "douleur_deglutition",
     "sueurs_nocturnes",
-    "courbatures"
+    "courbatures",
+    "stress"
   ],
+
+  "categories": [
+    {
+      "id": "general",
+      "label": "Général",
+      "symptomes": ["fievre", "fatigue", "frissons", "sueurs_nocturnes", "courbatures", "stress"]
+    },
+    {
+      "id": "respiratoire_orl",
+      "label": "Respiratoire / ORL",
+      "symptomes": [
+        "toux",
+        "toux_seche",
+        "mal_de_gorge",
+        "douleur_deglutition",
+        "nez_bouche",
+        "nez_qui_coule",
+        "eternuements",
+        "voix_rauque",
+        "ganglions_gonfles"
+      ]
+    },
+    {
+      "id": "digestif",
+      "label": "Digestif",
+      "symptomes": ["douleurs_abdominales", "nausees", "vomissements", "diarrhee", "perte_appetit"]
+    },
+    {
+      "id": "urinaire",
+      "label": "Urinaire",
+      "symptomes": ["brulures_urinaires", "envies_frequentes_uriner", "douleur_bas_ventre", "urines_troubles"]
+    },
+    {
+      "id": "neuro",
+      "label": "Neurologique",
+      "symptomes": [
+        "maux_de_tete",
+        "douleur_un_cote_tete",
+        "sensibilite_lumiere",
+        "vision_floue",
+        "vertiges",
+        "aggravation_effort"
+      ]
+    },
+    {
+      "id": "musculo",
+      "label": "Muscles / douleurs",
+      "symptomes": ["douleurs_musculaires", "courbatures"]
+    }
+  ],
+
   "diagnostics": [
     "rhume",
     "grippe",
     "angine",
     "gastro_enterite",
     "infection_urinaire",
-    "migraine"
+    "migraine",
+    "sinusite",
+    "bronchite",
+    "laryngite",
+    "pharyngite",
+    "covid",
+    "intoxication_alimentaire",
+    "cystite",
+    "cephalee_tension"
   ],
+
+  "diagnostics_meta": {
+    "rhume": { "label": "Rhume" },
+    "grippe": { "label": "Grippe" },
+    "angine": { "label": "Angine (amygdalite)" },
+    "gastro_enterite": { "label": "Gastro-entérite" },
+    "infection_urinaire": { "label": "Infection urinaire" },
+    "cystite": { "label": "Cystite" },
+    "migraine": { "label": "Migraine" },
+    "sinusite": { "label": "Sinusite" },
+    "bronchite": { "label": "Bronchite" },
+    "laryngite": { "label": "Laryngite" },
+    "pharyngite": { "label": "Pharyngite" },
+    "covid": { "label": "COVID-19 (tableau évocateur)" },
+    "intoxication_alimentaire": { "label": "Intoxication alimentaire" },
+    "cephalee_tension": { "label": "Céphalée de tension" }
+  },
+
   "regles": [
     {
       "id": "r_rhume_1",
       "diagnostic": "rhume",
       "si_tous": ["nez_qui_coule", "eternuements"],
-      "si_un": ["mal_de_gorge", "toux", "nez_bouche"],
-      "confiance": 0.65,
-      "explication": "Nez qui coule et éternuements sont typiques d'un rhume, parfois avec gorge irritée ou toux."
-    },
-    {
-      "id": "r_rhume_2",
-      "diagnostic": "rhume",
-      "si_tous": ["nez_bouche", "nez_qui_coule"],
-      "si_un": ["fatigue", "mal_de_gorge"],
-      "confiance": 0.55,
-      "explication": "Congestion et écoulement nasal évoquent un rhume, avec fatigue possible."
+      "si_un": ["nez_bouche", "mal_de_gorge", "toux"],
+      "confiance": 0.6,
+      "explication": "Écoulement nasal et éternuements avec symptômes ORL évoquent un rhume."
     },
     {
       "id": "r_grippe_1",
       "diagnostic": "grippe",
-      "si_tous": ["fievre", "courbatures", "fatigue"],
-      "si_un": ["frissons", "toux", "douleurs_musculaires"],
-      "confiance": 0.8,
-      "explication": "Fièvre + fatigue + courbatures avec frissons/toux évoquent une grippe."
-    },
-    {
-      "id": "r_grippe_2",
-      "diagnostic": "grippe",
-      "si_tous": ["fievre", "douleurs_musculaires"],
-      "si_un": ["frissons", "toux_seche", "maux_de_tete"],
-      "confiance": 0.75,
-      "explication": "Fièvre et douleurs musculaires, associés à frissons/toux sèche/maux de tête, orientent vers une grippe."
+      "si_tous": ["fievre", "frissons"],
+      "si_un": ["douleurs_musculaires", "courbatures", "fatigue", "maux_de_tete", "toux", "toux_seche"],
+      "confiance": 0.72,
+      "explication": "Fièvre et frissons avec symptômes généraux (courbatures, fatigue, céphalées) évoquent une grippe."
     },
     {
       "id": "r_angine_1",
       "diagnostic": "angine",
       "si_tous": ["mal_de_gorge", "douleur_deglutition"],
-      "si_un": ["fievre", "ganglions_gonfles", "voix_rauque"],
-      "confiance": 0.75,
-      "explication": "Mal de gorge avec douleur à la déglutition et fièvre/ganglions évoque une angine."
+      "si_un": ["fievre", "ganglions_gonfles"],
+      "confiance": 0.62,
+      "explication": "Mal de gorge avec douleur à la déglutition, associé à fièvre ou ganglions, évoque une angine."
     },
     {
-      "id": "r_angine_2",
-      "diagnostic": "angine",
-      "si_tous": ["mal_de_gorge", "ganglions_gonfles"],
-      "si_un": ["fievre", "douleur_deglutition"],
-      "confiance": 0.7,
-      "explication": "Gorge irritée avec ganglions et fièvre possible évoquent une angine."
+      "id": "r_sinusite_1",
+      "diagnostic": "sinusite",
+      "si_tous": ["maux_de_tete", "nez_bouche"],
+      "si_un": ["fievre", "nez_qui_coule"],
+      "confiance": 0.6,
+      "explication": "Maux de tête avec nez bouché et écoulement nasal évoquent une sinusite."
+    },
+    {
+      "id": "r_bronchite_1",
+      "diagnostic": "bronchite",
+      "si_tous": ["toux"],
+      "si_un": ["fatigue", "toux_seche", "fievre"],
+      "confiance": 0.52,
+      "explication": "Toux associée à fatigue, toux sèche ou fièvre peut évoquer une bronchite."
+    },
+    {
+      "id": "r_covid_1",
+      "diagnostic": "covid",
+      "si_tous": ["fievre"],
+      "si_un": ["toux", "toux_seche", "fatigue", "maux_de_tete"],
+      "confiance": 0.45,
+      "explication": "Fièvre associée à des signes respiratoires ou généraux peut évoquer un tableau viral compatible avec le COVID."
     },
     {
       "id": "r_gastro_1",
       "diagnostic": "gastro_enterite",
-      "si_tous": ["diarrhee", "douleurs_abdominales"],
-      "si_un": ["nausees", "vomissements", "perte_appetit"],
-      "confiance": 0.8,
-      "explication": "Diarrhée et douleurs abdominales avec nausées/vomissements évoquent une gastro-entérite."
+      "si_tous": ["diarrhee"],
+      "si_un": ["nausees", "vomissements", "douleurs_abdominales", "fievre"],
+      "confiance": 0.62,
+      "explication": "Diarrhée associée à des troubles digestifs évoque une gastro-entérite."
     },
     {
-      "id": "r_gastro_2",
-      "diagnostic": "gastro_enterite",
-      "si_tous": ["vomissements"],
-      "si_un": ["diarrhee", "nausees", "douleurs_abdominales"],
-      "confiance": 0.65,
-      "explication": "Vomissements associés à diarrhée ou douleurs abdominales orientent vers une gastro-entérite."
-    },
-    {
-      "id": "r_iu_1",
-      "diagnostic": "infection_urinaire",
+      "id": "r_cystite_1",
+      "diagnostic": "cystite",
       "si_tous": ["brulures_urinaires", "envies_frequentes_uriner"],
       "si_un": ["douleur_bas_ventre", "urines_troubles"],
-      "confiance": 0.85,
-      "explication": "Brûlures urinaires et envies fréquentes, avec douleur pelvienne/urines troubles, évoquent une infection urinaire."
-    },
-    {
-      "id": "r_iu_2",
-      "diagnostic": "infection_urinaire",
-      "si_tous": ["brulures_urinaires"],
-      "si_un": ["envies_frequentes_uriner", "urines_troubles", "douleur_bas_ventre"],
-      "confiance": 0.7,
-      "explication": "Brûlures urinaires avec signes associés (envies fréquentes, urines troubles, douleur bas ventre) orientent vers une infection urinaire."
+      "confiance": 0.65,
+      "explication": "Brûlures urinaires et envies fréquentes évoquent une cystite."
     },
     {
       "id": "r_migraine_1",
       "diagnostic": "migraine",
-      "si_tous": ["maux_de_tete", "douleur_un_cote_tete"],
-      "si_un": ["sensibilite_lumiere", "nausees", "aggravation_effort"],
-      "confiance": 0.85,
-      "explication": "Céphalée d'un côté avec photophobie/nausées et aggravation à l'effort évoque une migraine."
-    },
-    {
-      "id": "r_migraine_2",
-      "diagnostic": "migraine",
       "si_tous": ["maux_de_tete", "sensibilite_lumiere"],
-      "si_un": ["nausees", "vision_floue", "vertiges"],
-      "confiance": 0.75,
-      "explication": "Maux de tête avec sensibilité à la lumière et nausées/vision floue peut correspondre à une migraine."
+      "si_un": ["nausees", "douleur_un_cote_tete", "aggravation_effort"],
+      "confiance": 0.72,
+      "explication": "Céphalées avec photophobie et nausées évoquent une migraine."
     },
     {
-      "id": "r_orl_1",
-      "diagnostic": "rhume",
-      "si_tous": ["toux", "mal_de_gorge", "nez_qui_coule"],
-      "si_un": ["fatigue", "nez_bouche", "voix_rauque"],
-      "confiance": 0.5,
-      "explication": "Toux + mal de gorge + nez qui coule évoquent une infection ORL de type rhume."
-    },
-    {
-      "id": "r_syndrome_grippal_1",
-      "diagnostic": "grippe",
-      "si_tous": ["fatigue"],
-      "si_un": ["courbatures", "douleurs_musculaires", "frissons", "toux"],
-      "confiance": 0.45,
-      "explication": "Fatigue avec douleurs/courbatures et toux peut évoquer un syndrome grippal même sans fièvre."
+      "id": "r_cephalee_tension_1",
+      "diagnostic": "cephalee_tension",
+      "si_tous": ["maux_de_tete", "fatigue"],
+      "si_un": ["stress"],
+      "confiance": 0.3,
+      "explication": "Maux de tête associés à fatigue et stress évoquent une céphalée de tension."
     }
   ]
 }

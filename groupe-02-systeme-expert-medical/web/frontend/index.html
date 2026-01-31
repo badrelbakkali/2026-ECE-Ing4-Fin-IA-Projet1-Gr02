@@ -1,0 +1,491 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Système expert médical</title>
+
+  <style>
+    :root {
+      --bg: #f4f7fb;
+      --card: #ffffff;
+      --primary: #2563eb;
+      --primary-soft: #e0e7ff;
+      --danger: #dc2626;
+      --warning: #d97706;
+      --success: #16a34a;
+      --text: #0f172a;
+      --muted: #64748b;
+      --border: #e5e7eb;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 32px;
+      font-family: "Inter", system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    h1 { margin: 0; font-size: 28px; }
+    .subtitle { margin-top: 4px; color: var(--muted); }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-top: 24px;
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: 14px;
+      padding: 20px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+    }
+
+    .card h2 { margin-top: 0; margin-bottom: 16px; font-size: 20px; }
+
+    .section { margin-bottom: 20px; }
+
+    select {
+      width: 100%;
+      padding: 10px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      font-size: 14px;
+    }
+
+    .categories { display: grid; gap: 14px; }
+    .category {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px;
+      background: #fbfdff;
+    }
+    .category-title {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .category-title h3 {
+      margin: 0;
+      font-size: 14px;
+      letter-spacing: 0.2px;
+    }
+    .category-title .count {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .symptoms {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+
+    .symptom {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      user-select: none;
+    }
+
+    .actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    button {
+      padding: 10px 14px;
+      border-radius: 10px;
+      border: none;
+      cursor: pointer;
+      font-weight: 500;
+      font-size: 14px;
+    }
+
+    .btn-primary { background: var(--primary); color: white; }
+    .btn-secondary { background: var(--primary-soft); color: var(--primary); }
+
+    .status {
+      margin-top: -6px;
+      margin-bottom: 10px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .status.error { color: var(--danger); }
+    .status.ok { color: var(--success); }
+
+    .result-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 500;
+      margin-left: 8px;
+    }
+
+    .low { background: #fee2e2; color: var(--danger); }
+    .mid { background: #ffedd5; color: var(--warning); }
+    .high { background: #dcfce7; color: var(--success); }
+
+    .result-item {
+      padding-top: 10px;
+      margin-top: 10px;
+      border-top: 1px solid var(--border);
+    }
+    .result-item:first-child {
+      padding-top: 0;
+      margin-top: 0;
+      border-top: none;
+    }
+
+    ul { padding-left: 18px; margin-top: 10px; }
+
+    .suggestions {
+      margin-top: 12px;
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    pre {
+      margin-top: 16px;
+      background: #0f172a;
+      color: #e5e7eb;
+      padding: 14px;
+      border-radius: 10px;
+      font-size: 12px;
+      overflow: auto;
+    }
+
+    @media (max-width: 900px) {
+      .layout { grid-template-columns: 1fr; }
+      body { padding: 18px; }
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Système expert médical</h1>
+  <div class="subtitle">Prototype pédagogique — ne remplace pas un avis médical</div>
+
+  <div class="layout">
+    <div class="card">
+      <h2>Symptômes</h2>
+
+      <div class="section">
+        <div class="subtitle">Mode d’inférence</div>
+        <select id="mode">
+          <option value="avant">Chaînage avant</option>
+          <option value="arriere">Chaînage arrière</option>
+        </select>
+      </div>
+
+      <div id="config-status" class="status">Chargement des symptômes...</div>
+      <div class="categories" id="symptoms"></div>
+
+      <div class="actions">
+        <button class="btn-primary" id="btn-diagnose">Diagnostiquer</button>
+        <button class="btn-secondary" id="btn-clear">Réinitialiser</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Résultats</h2>
+      <div id="api-status" class="status"></div>
+      <div id="results"></div>
+
+      <h3 style="margin-top: 20px;">Debug</h3>
+      <pre id="debug">{}</pre>
+    </div>
+  </div>
+
+  <script>
+    const API_BASE = "http://127.0.0.1:8000";
+    const API_DIAG = API_BASE + "/diagnostic";
+    const API_CONFIG = API_BASE + "/config";
+
+    let CONFIG = {
+      symptomes: [],
+      categories: [],
+      diagnostics_meta: {}
+    };
+
+    function scoreBadge(score) {
+      if (score < 0.4) return ["Incertitude élevée", "low"];
+      if (score < 0.7) return ["Diagnostic possible", "mid"];
+      return ["Diagnostic probable", "high"];
+    }
+
+    function setStatus(id, text, kind) {
+      const node = document.getElementById(id);
+      node.textContent = text || "";
+      node.className = "status" + (kind ? " " + kind : "");
+    }
+
+    function createSymptomCheckbox(symptom) {
+      const d = document.createElement("label");
+      d.className = "symptom";
+      d.innerHTML = `<input type="checkbox" value="${symptom}"> ${symptom}`;
+      return d;
+    }
+
+    function renderSymptomsFromConfig() {
+      const container = document.getElementById("symptoms");
+      container.innerHTML = "";
+
+      const known = new Set(CONFIG.symptomes || []);
+      const categories = Array.isArray(CONFIG.categories) ? CONFIG.categories : [];
+
+      if (categories.length > 0) {
+        for (const cat of categories) {
+          const box = document.createElement("div");
+          box.className = "category";
+
+          const title = document.createElement("div");
+          title.className = "category-title";
+
+          const h = document.createElement("h3");
+          h.textContent = cat.label || cat.id || "Catégorie";
+
+          const list = Array.isArray(cat.symptomes) ? cat.symptomes.filter(s => known.has(s)) : [];
+          const count = document.createElement("div");
+          count.className = "count";
+          count.textContent = `${list.length} symptôme(s)`;
+
+          title.appendChild(h);
+          title.appendChild(count);
+
+          const grid = document.createElement("div");
+          grid.className = "symptoms";
+          for (const s of list) grid.appendChild(createSymptomCheckbox(s));
+
+          box.appendChild(title);
+          box.appendChild(grid);
+          container.appendChild(box);
+        }
+
+        const used = new Set();
+        for (const cat of categories) {
+          (cat.symptomes || []).forEach(s => used.add(s));
+        }
+
+        const leftovers = (CONFIG.symptomes || []).filter(s => !used.has(s));
+        if (leftovers.length > 0) {
+          const box = document.createElement("div");
+          box.className = "category";
+
+          const title = document.createElement("div");
+          title.className = "category-title";
+
+          const h = document.createElement("h3");
+          h.textContent = "Autres";
+
+          const count = document.createElement("div");
+          count.className = "count";
+          count.textContent = `${leftovers.length} symptôme(s)`;
+
+          title.appendChild(h);
+          title.appendChild(count);
+
+          const grid = document.createElement("div");
+          grid.className = "symptoms";
+          for (const s of leftovers) grid.appendChild(createSymptomCheckbox(s));
+
+          box.appendChild(title);
+          box.appendChild(grid);
+          container.appendChild(box);
+        }
+      } else {
+        const box = document.createElement("div");
+        box.className = "category";
+        const title = document.createElement("div");
+        title.className = "category-title";
+        const h = document.createElement("h3");
+        h.textContent = "Symptômes";
+        const count = document.createElement("div");
+        count.className = "count";
+        count.textContent = `${(CONFIG.symptomes || []).length} symptôme(s)`;
+        title.appendChild(h);
+        title.appendChild(count);
+
+        const grid = document.createElement("div");
+        grid.className = "symptoms";
+        for (const s of (CONFIG.symptomes || [])) grid.appendChild(createSymptomCheckbox(s));
+
+        box.appendChild(title);
+        box.appendChild(grid);
+        container.appendChild(box);
+      }
+    }
+
+    function selectedSymptoms() {
+      return [...document.querySelectorAll("#symptoms input:checked")].map(x => x.value);
+    }
+
+    function labelForDiagnostic(id) {
+      if (id === "diagnostic_incertain") return "État infectieux / fébrile non spécifique";
+      const meta = (CONFIG.diagnostics_meta || {})[id];
+      if (meta && typeof meta.label === "string" && meta.label.trim().length > 0) return meta.label;
+      return id;
+    }
+
+    function computeSuggestions(selected, items) {
+      const map = Object.create(null);
+
+      for (const diag of items) {
+        const score = Number(diag.score);
+        if (!Number.isFinite(score) || score < 0.4) continue;
+
+        const d = String(diag.diagnostic || "");
+        const want = [];
+        if (d === "grippe") want.push("toux", "toux_seche", "courbatures", "frissons");
+        if (d === "rhume") want.push("nez_qui_coule", "eternuements", "nez_bouche", "mal_de_gorge");
+        if (d === "angine") want.push("douleur_deglutition", "ganglions_gonfles", "fievre");
+        if (d === "sinusite") want.push("nez_bouche", "nez_qui_coule", "maux_de_tete");
+        if (d === "migraine") want.push("sensibilite_lumiere", "nausees", "douleur_un_cote_tete", "aggravation_effort");
+        if (d === "cystite") want.push("envies_frequentes_uriner", "douleur_bas_ventre", "urines_troubles");
+        if (d === "gastro_enterite") want.push("vomissements", "douleurs_abdominales", "nausees", "perte_appetit");
+
+        for (const s of want) {
+          map[s] = (map[s] || 0) + score;
+        }
+      }
+
+      const selectedSet = new Set(selected);
+      const candidates = Object.keys(map)
+        .filter(s => !selectedSet.has(s) && (CONFIG.symptomes || []).includes(s))
+        .sort((a, b) => map[b] - map[a]);
+
+      return candidates.slice(0, 6);
+    }
+
+    function renderResults(data) {
+      const r = document.getElementById("results");
+      r.innerHTML = "";
+
+      if (!Array.isArray(data) || data.length === 0) {
+        r.innerHTML = "<div class='subtitle'>Aucun résultat.</div>";
+        return;
+      }
+
+      const selected = selectedSymptoms();
+      const suggestions = computeSuggestions(selected, data);
+
+      data.forEach((item, idx) => {
+        const div = document.createElement("div");
+        div.className = "result-item";
+
+        const label = labelForDiagnostic(item.diagnostic);
+        const [txt, cls] = scoreBadge(item.score);
+
+        div.innerHTML = `
+          <div class="result-title">
+            ${label} — score ${item.score}
+            <span class="badge ${cls}">${txt}</span>
+          </div>
+        `;
+
+        if (item.explications?.length) {
+          const ul = document.createElement("ul");
+          item.explications.forEach(e => {
+            const li = document.createElement("li");
+            li.textContent = e;
+            ul.appendChild(li);
+          });
+          div.appendChild(ul);
+        }
+
+        if (idx === 0 && suggestions.length > 0) {
+          const p = document.createElement("div");
+          p.className = "suggestions";
+          p.innerHTML = "<b>Pour affiner :</b> " + suggestions.join(", ");
+          div.appendChild(p);
+        }
+
+        r.appendChild(div);
+      });
+    }
+
+    async function loadConfig() {
+      setStatus("config-status", "Chargement des symptômes...", "");
+      try {
+        const res = await fetch(API_CONFIG);
+        const data = await res.json();
+        if (!res.ok) {
+          setStatus("config-status", "Erreur config: " + (data.detail || res.status), "error");
+          return;
+        }
+
+        CONFIG = {
+          symptomes: Array.isArray(data.symptomes) ? data.symptomes : [],
+          categories: Array.isArray(data.categories) ? data.categories : [],
+          diagnostics_meta: data.diagnostics_meta || {}
+        };
+
+        renderSymptomsFromConfig();
+        setStatus("config-status", "OK", "ok");
+      } catch (e) {
+        setStatus("config-status", "Impossible de contacter l'API (/config).", "error");
+      }
+    }
+
+    async function diagnose() {
+      const payload = {
+        symptomes: selectedSymptoms(),
+        mode: document.getElementById("mode").value
+      };
+
+      document.getElementById("debug").textContent = JSON.stringify(payload, null, 2);
+      setStatus("api-status", "Requête en cours...", "");
+
+      try {
+        const res = await fetch(API_DIAG, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+          setStatus("api-status", "Erreur API: " + (data.detail || res.status), "error");
+          renderResults([]);
+          return;
+        }
+
+        setStatus("api-status", "OK", "ok");
+        renderResults(data);
+      } catch (e) {
+        setStatus("api-status", "Impossible de contacter l'API (/diagnostic).", "error");
+        renderResults([]);
+      }
+    }
+
+    function clearAll() {
+      document.querySelectorAll("#symptoms input").forEach(cb => cb.checked = false);
+      document.getElementById("results").innerHTML = "";
+      setStatus("api-status", "", "");
+      document.getElementById("debug").textContent = "{}";
+    }
+
+    document.getElementById("btn-diagnose").onclick = diagnose;
+    document.getElementById("btn-clear").onclick = clearAll;
+
+    loadConfig();
+  </script>
+</body>
+</html>

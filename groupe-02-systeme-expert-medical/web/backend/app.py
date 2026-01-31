@@ -1,6 +1,7 @@
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-from typing import List, Literal
+from typing import List, Literal, Dict, Any
 
 from pathlib import Path
 import sys
@@ -20,6 +21,14 @@ BASE_PATH = ROOT / "src" / "base_connaissances.json"
 
 app = FastAPI(title="API Système Expert Médical")
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 
 class SymptomesInput(BaseModel):
     symptomes: List[str]
@@ -30,6 +39,16 @@ class DiagnosticOutput(BaseModel):
     diagnostic: str
     score: float
     explications: List[str]
+
+
+@app.get("/config")
+def config() -> Dict[str, Any]:
+    base = charger_base_connaissances(str(BASE_PATH))
+    return {
+        "symptomes": base.get("symptomes", []),
+        "categories": base.get("categories", []),
+        "diagnostics_meta": base.get("diagnostics_meta", {}),
+    }
 
 
 @app.post("/diagnostic", response_model=List[DiagnosticOutput])
@@ -45,7 +64,8 @@ def diagnostic(data: SymptomesInput):
     else:
         scores, traces = inferer_diagnostics_arriere(base, symptomes_valides)
 
-    resultats = []
+    resultats: List[DiagnosticOutput] = []
+
     for diag, score in top_k(scores, k=3):
         explications = []
         if diag in traces:
@@ -56,6 +76,19 @@ def diagnostic(data: SymptomesInput):
                 diagnostic=diag,
                 score=round(score, 3),
                 explications=explications,
+            )
+        )
+
+    if not resultats:
+        resultats.append(
+            DiagnosticOutput(
+                diagnostic="diagnostic_incertain",
+                score=0.35,
+                explications=[
+                    "Les symptômes fournis sont insuffisants pour établir un diagnostic précis.",
+                    "Un état infectieux ou inflammatoire non spécifique est possible.",
+                    "Des symptômes supplémentaires sont recommandés pour affiner le diagnostic.",
+                ],
             )
         )
 
