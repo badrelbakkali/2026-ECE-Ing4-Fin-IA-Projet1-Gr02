@@ -3,213 +3,655 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Système expert médical</title>
+  <title>Système Expert Médical</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
   <style>
     :root {
-      --bg: #f4f7fb;
+      --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      --gradient-secondary: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      --gradient-success: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+      --gradient-danger: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+      
+      --bg: #f0f4f8;
       --card: #ffffff;
-      --primary: #2563eb;
-      --primary-soft: #e0e7ff;
-      --danger: #dc2626;
-      --warning: #d97706;
-      --success: #16a34a;
-      --text: #0f172a;
-      --muted: #64748b;
-      --border: #e5e7eb;
+      --primary: #667eea;
+      --primary-dark: #5568d3;
+      --primary-light: #e8eaff;
+      --danger: #f5576c;
+      --danger-light: #ffe5e9;
+      --warning: #ffa726;
+      --warning-light: #fff3e0;
+      --success: #00e676;
+      --success-light: #e8f5e9;
+      --text: #2d3748;
+      --text-light: #718096;
+      --border: #e2e8f0;
+      --shadow: rgba(102, 126, 234, 0.1);
+      --shadow-lg: rgba(102, 126, 234, 0.15);
     }
 
-    * { box-sizing: border-box; }
+    * { 
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
     body {
-      margin: 0;
-      padding: 32px;
-      font-family: "Inter", system-ui, sans-serif;
+      font-family: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
       background: var(--bg);
       color: var(--text);
+      padding: 40px 20px;
+      min-height: 100vh;
+      position: relative;
     }
 
-    h1 { margin: 0; font-size: 28px; }
-    .subtitle { margin-top: 4px; color: var(--muted); }
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 300px;
+      background: var(--gradient-primary);
+      z-index: -1;
+      opacity: 0.05;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 40px;
+      animation: fadeInDown 0.6s ease;
+    }
+
+    h1 {
+      font-size: 42px;
+      font-weight: 700;
+      background: var(--gradient-primary);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 8px;
+      letter-spacing: -0.5px;
+    }
+
+    .subtitle {
+      color: var(--text-light);
+      font-size: 16px;
+      font-weight: 400;
+    }
+
+    .medical-icon {
+      display: inline-block;
+      width: 60px;
+      height: 60px;
+      background: var(--gradient-primary);
+      border-radius: 50%;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 30px;
+      box-shadow: 0 10px 30px var(--shadow-lg);
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+
+    @keyframes fadeInDown {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
 
     .layout {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 24px;
-      margin-top: 24px;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 30px;
+      animation: fadeInUp 0.6s ease 0.2s both;
     }
 
     .card {
       background: var(--card);
-      border-radius: 14px;
-      padding: 20px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+      border-radius: 24px;
+      padding: 32px;
+      box-shadow: 0 20px 60px var(--shadow);
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      position: relative;
+      overflow: hidden;
     }
 
-    .card h2 { margin-top: 0; margin-bottom: 16px; font-size: 20px; }
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: var(--gradient-primary);
+    }
 
-    .section { margin-bottom: 20px; }
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 25px 70px var(--shadow-lg);
+    }
+
+    .card h2 {
+      font-size: 26px;
+      font-weight: 600;
+      margin-bottom: 24px;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .card h2::before {
+      content: '';
+      display: inline-block;
+      width: 6px;
+      height: 28px;
+      background: var(--gradient-primary);
+      border-radius: 3px;
+    }
+
+    .section {
+      margin-bottom: 28px;
+    }
+
+    .section-label {
+      font-size: 13px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-light);
+      margin-bottom: 12px;
+      display: block;
+    }
 
     select {
       width: 100%;
-      padding: 10px;
-      border-radius: 10px;
-      border: 1px solid var(--border);
-      font-size: 14px;
+      padding: 14px 18px;
+      border-radius: 16px;
+      border: 2px solid var(--border);
+      font-size: 15px;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 500;
+      color: var(--text);
+      background: white;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%23667eea' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 18px center;
+      padding-right: 45px;
     }
 
-    .categories { display: grid; gap: 14px; }
-    .category {
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 12px;
-      background: #fbfdff;
+    select:hover {
+      border-color: var(--primary);
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
     }
+
+    select:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 4px var(--primary-light);
+    }
+
+    .categories {
+      display: grid;
+      gap: 20px;
+      max-height: 550px;
+      overflow-y: auto;
+      padding-right: 8px;
+    }
+
+    .categories::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .categories::-webkit-scrollbar-track {
+      background: var(--bg);
+      border-radius: 10px;
+    }
+
+    .categories::-webkit-scrollbar-thumb {
+      background: var(--primary);
+      border-radius: 10px;
+    }
+
+    .category {
+      border: 2px solid var(--border);
+      border-radius: 18px;
+      padding: 20px;
+      background: linear-gradient(135deg, #fafbff 0%, #f7f9fc 100%);
+      transition: all 0.3s ease;
+    }
+
+    .category:hover {
+      border-color: var(--primary);
+      background: white;
+      box-shadow: 0 8px 24px var(--shadow);
+    }
+
     .category-title {
       display: flex;
-      align-items: baseline;
+      align-items: center;
       justify-content: space-between;
-      gap: 10px;
-      margin-bottom: 10px;
+      margin-bottom: 16px;
     }
+
     .category-title h3 {
-      margin: 0;
-      font-size: 14px;
-      letter-spacing: 0.2px;
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text);
+      letter-spacing: -0.2px;
     }
-    .category-title .count {
+
+    .count {
+      background: var(--primary-light);
+      color: var(--primary);
+      padding: 4px 12px;
+      border-radius: 12px;
       font-size: 12px;
-      color: var(--muted);
+      font-weight: 600;
     }
 
     .symptoms {
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 12px;
     }
 
     .symptom {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
       font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
       user-select: none;
+      padding: 10px 14px;
+      border-radius: 12px;
+      transition: all 0.2s ease;
+      position: relative;
+    }
+
+    .symptom:hover {
+      background: var(--primary-light);
+    }
+
+    .symptom input[type="checkbox"] {
+      width: 20px;
+      height: 20px;
+      cursor: pointer;
+      appearance: none;
+      border: 2px solid var(--border);
+      border-radius: 6px;
+      transition: all 0.2s ease;
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    .symptom input[type="checkbox"]:hover {
+      border-color: var(--primary);
+    }
+
+    .symptom input[type="checkbox"]:checked {
+      background: var(--gradient-primary);
+      border-color: var(--primary);
+    }
+
+    .symptom input[type="checkbox"]:checked::after {
+      content: '✓';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: white;
+      font-size: 14px;
+      font-weight: bold;
     }
 
     .actions {
       display: flex;
-      gap: 12px;
-      margin-top: 16px;
+      gap: 14px;
+      margin-top: 28px;
     }
 
     button {
-      padding: 10px 14px;
-      border-radius: 10px;
+      flex: 1;
+      padding: 16px 24px;
+      border-radius: 16px;
       border: none;
       cursor: pointer;
-      font-weight: 500;
-      font-size: 14px;
+      font-weight: 600;
+      font-size: 15px;
+      font-family: 'Poppins', sans-serif;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      letter-spacing: 0.3px;
     }
 
-    .btn-primary { background: var(--primary); color: white; }
-    .btn-secondary { background: var(--primary-soft); color: var(--primary); }
+    button::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.3);
+      transform: translate(-50%, -50%);
+      transition: width 0.6s, height 0.6s;
+    }
+
+    button:hover::before {
+      width: 300px;
+      height: 300px;
+    }
+
+    .btn-primary {
+      background: var(--gradient-primary);
+      color: white;
+      box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 15px 40px rgba(102, 126, 234, 0.4);
+    }
+
+    .btn-primary:active {
+      transform: translateY(0);
+    }
+
+    .btn-secondary {
+      background: white;
+      color: var(--primary);
+      border: 2px solid var(--primary);
+    }
+
+    .btn-secondary:hover {
+      background: var(--primary-light);
+      transform: translateY(-2px);
+    }
 
     .status {
-      margin-top: -6px;
-      margin-bottom: 10px;
-      font-size: 12px;
-      color: var(--muted);
+      margin-bottom: 20px;
+      padding: 12px 18px;
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 500;
+      display: inline-block;
+      animation: fadeInUp 0.3s ease;
     }
-    .status.error { color: var(--danger); }
-    .status.ok { color: var(--success); }
+
+    .status.error {
+      background: var(--danger-light);
+      color: var(--danger);
+      border-left: 4px solid var(--danger);
+    }
+
+    .status.ok {
+      background: var(--success-light);
+      color: var(--success);
+      border-left: 4px solid var(--success);
+    }
+
+    .status:empty {
+      display: none;
+    }
 
     .result-title {
       font-size: 18px;
       font-weight: 600;
-      margin-bottom: 6px;
+      margin-bottom: 12px;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
     }
 
     .badge {
-      display: inline-block;
-      padding: 4px 10px;
-      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      padding: 6px 14px;
+      border-radius: 20px;
       font-size: 12px;
-      font-weight: 500;
-      margin-left: 8px;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+      text-transform: uppercase;
     }
 
-    .low { background: #fee2e2; color: var(--danger); }
-    .mid { background: #ffedd5; color: var(--warning); }
-    .high { background: #dcfce7; color: var(--success); }
+    .low {
+      background: var(--danger-light);
+      color: var(--danger);
+    }
+
+    .mid {
+      background: var(--warning-light);
+      color: var(--warning);
+    }
+
+    .high {
+      background: var(--success-light);
+      color: var(--success);
+    }
 
     .result-item {
-      padding-top: 10px;
-      margin-top: 10px;
-      border-top: 1px solid var(--border);
-    }
-    .result-item:first-child {
-      padding-top: 0;
-      margin-top: 0;
-      border-top: none;
+      padding: 24px;
+      margin-bottom: 20px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, #fafbff 0%, #f7f9fc 100%);
+      border: 2px solid var(--border);
+      transition: all 0.3s ease;
+      animation: fadeInUp 0.4s ease;
     }
 
-    ul { padding-left: 18px; margin-top: 10px; }
+    .result-item:hover {
+      border-color: var(--primary);
+      box-shadow: 0 8px 24px var(--shadow);
+      transform: translateX(4px);
+    }
+
+    .result-item:last-child {
+      margin-bottom: 0;
+    }
+
+    ul {
+      padding-left: 24px;
+      margin-top: 14px;
+      line-height: 1.8;
+    }
+
+    ul li {
+      margin-bottom: 8px;
+      color: var(--text-light);
+      font-size: 14px;
+    }
 
     .suggestions {
-      margin-top: 12px;
+      margin-top: 16px;
+      padding: 14px 18px;
+      background: var(--primary-light);
+      border-radius: 12px;
       font-size: 14px;
-      color: var(--muted);
+      color: var(--primary-dark);
+      border-left: 4px solid var(--primary);
+    }
+
+    .suggestions b {
+      font-weight: 600;
     }
 
     pre {
-      margin-top: 16px;
-      background: #0f172a;
-      color: #e5e7eb;
-      padding: 14px;
-      border-radius: 10px;
+      margin-top: 20px;
+      background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
+      color: #e2e8f0;
+      padding: 20px;
+      border-radius: 16px;
       font-size: 12px;
       overflow: auto;
+      border: 2px solid rgba(102, 126, 234, 0.2);
+      font-family: 'Monaco', 'Courier New', monospace;
     }
 
-    @media (max-width: 900px) {
-      .layout { grid-template-columns: 1fr; }
-      body { padding: 18px; }
+    pre::-webkit-scrollbar {
+      height: 6px;
+    }
+
+    pre::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+    }
+
+    pre::-webkit-scrollbar-thumb {
+      background: var(--primary);
+      border-radius: 10px;
+    }
+
+    #results:empty::before {
+      content: '💡 Sélectionnez des symptômes et cliquez sur "Diagnostiquer" pour obtenir des résultats';
+      display: block;
+      padding: 60px 20px;
+      text-align: center;
+      color: var(--text-light);
+      font-size: 15px;
+      font-weight: 500;
+      background: var(--bg);
+      border-radius: 16px;
+      border: 2px dashed var(--border);
+    }
+
+    .loading {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid var(--primary-light);
+      border-top-color: var(--primary);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    @media (max-width: 1024px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+      h1 {
+        font-size: 36px;
+      }
+
+      .card {
+        padding: 24px;
+      }
+
+      .symptoms {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 600px) {
+      body {
+        padding: 20px 12px;
+      }
+
+      h1 {
+        font-size: 28px;
+      }
+
+      .card {
+        padding: 20px;
+        border-radius: 18px;
+      }
+
+      .actions {
+        flex-direction: column;
+      }
+
+      button {
+        width: 100%;
+      }
     }
   </style>
 </head>
 
 <body>
-  <h1>Système expert médical</h1>
-  <div class="subtitle">Prototype pédagogique — ne remplace pas un avis médical</div>
+  <div class="container">
+    <header>
+      <div class="medical-icon">⚕️</div>
+      <h1>Système Expert Médical</h1>
+      <div class="subtitle">Prototype pédagogique — ne remplace pas un avis médical professionnel</div>
+    </header>
 
-  <div class="layout">
-    <div class="card">
-      <h2>Symptômes</h2>
+    <div class="layout">
+      <div class="card">
+        <h2>Symptômes</h2>
 
-      <div class="section">
-        <div class="subtitle">Mode d’inférence</div>
-        <select id="mode">
-          <option value="avant">Chaînage avant</option>
-          <option value="arriere">Chaînage arrière</option>
-        </select>
+        <div class="section">
+          <label class="section-label">Mode d'inférence</label>
+          <select id="mode">
+            <option value="avant">🔄 Chaînage avant</option>
+            <option value="arriere">🔍 Chaînage arrière</option>
+          </select>
+        </div>
+
+        <div id="config-status" class="status">Chargement des symptômes...</div>
+        <div class="categories" id="symptoms"></div>
+
+        <div class="actions">
+          <button class="btn-primary" id="btn-diagnose">
+            <span>🔬 Diagnostiquer</span>
+          </button>
+          <button class="btn-secondary" id="btn-clear">
+            <span>🔄 Réinitialiser</span>
+          </button>
+        </div>
       </div>
 
-      <div id="config-status" class="status">Chargement des symptômes...</div>
-      <div class="categories" id="symptoms"></div>
+      <div class="card">
+        <h2>Résultats</h2>
+        <div id="api-status" class="status"></div>
+        <div id="results"></div>
 
-      <div class="actions">
-        <button class="btn-primary" id="btn-diagnose">Diagnostiquer</button>
-        <button class="btn-secondary" id="btn-clear">Réinitialiser</button>
+        <h2 style="margin-top: 32px; font-size: 20px;">Debug</h2>
+        <pre id="debug">{}</pre>
       </div>
-    </div>
-
-    <div class="card">
-      <h2>Résultats</h2>
-      <div id="api-status" class="status"></div>
-      <div id="results"></div>
-
-      <h3 style="margin-top: 20px;">Debug</h3>
-      <pre id="debug">{}</pre>
     </div>
   </div>
 
@@ -239,7 +681,7 @@
     function createSymptomCheckbox(symptom) {
       const d = document.createElement("label");
       d.className = "symptom";
-      d.innerHTML = `<input type="checkbox" value="${symptom}"> ${symptom}`;
+      d.innerHTML = `<input type="checkbox" value="${symptom}"> <span>${symptom}</span>`;
       return d;
     }
 
@@ -378,7 +820,6 @@
       r.innerHTML = "";
 
       if (!Array.isArray(data) || data.length === 0) {
-        r.innerHTML = "<div class='subtitle'>Aucun résultat.</div>";
         return;
       }
 
@@ -394,7 +835,8 @@
 
         div.innerHTML = `
           <div class="result-title">
-            ${label} — score ${item.score}
+            <span>${label}</span>
+            <span style="color: var(--text-light); font-weight: 500; font-size: 16px;">Score: ${item.score.toFixed(2)}</span>
             <span class="badge ${cls}">${txt}</span>
           </div>
         `;
@@ -412,7 +854,7 @@
         if (idx === 0 && suggestions.length > 0) {
           const p = document.createElement("div");
           p.className = "suggestions";
-          p.innerHTML = "<b>Pour affiner :</b> " + suggestions.join(", ");
+          p.innerHTML = "<b>💡 Pour affiner le diagnostic :</b> " + suggestions.join(", ");
           div.appendChild(p);
         }
 
@@ -437,9 +879,9 @@
         };
 
         renderSymptomsFromConfig();
-        setStatus("config-status", "OK", "ok");
+        setStatus("config-status", "✅ Système prêt", "ok");
       } catch (e) {
-        setStatus("config-status", "Impossible de contacter l'API (/config).", "error");
+        setStatus("config-status", "❌ Impossible de contacter l'API (/config)", "error");
       }
     }
 
@@ -449,8 +891,13 @@
         mode: document.getElementById("mode").value
       };
 
+      if (payload.symptomes.length === 0) {
+        setStatus("api-status", "⚠️ Veuillez sélectionner au moins un symptôme", "error");
+        return;
+      }
+
       document.getElementById("debug").textContent = JSON.stringify(payload, null, 2);
-      setStatus("api-status", "Requête en cours...", "");
+      setStatus("api-status", "🔄 Analyse en cours...", "");
 
       try {
         const res = await fetch(API_DIAG, {
@@ -462,15 +909,15 @@
         const data = await res.json();
 
         if (!res.ok) {
-          setStatus("api-status", "Erreur API: " + (data.detail || res.status), "error");
+          setStatus("api-status", "❌ Erreur API: " + (data.detail || res.status), "error");
           renderResults([]);
           return;
         }
 
-        setStatus("api-status", "OK", "ok");
+        setStatus("api-status", "✅ Diagnostic terminé", "ok");
         renderResults(data);
       } catch (e) {
-        setStatus("api-status", "Impossible de contacter l'API (/diagnostic).", "error");
+        setStatus("api-status", "❌ Impossible de contacter l'API (/diagnostic)", "error");
         renderResults([]);
       }
     }
